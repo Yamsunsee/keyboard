@@ -1,0 +1,94 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Be Vietnam Pro", sans-serif;
+  user-select: none;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-image: repeating-linear-gradient(-45deg, #fff, #eee, #fff 5px);
+}
+
+.screen {
+  width: 50rem;
+  height: 16rem;
+  border-radius: 1rem;
+  border: solid 1px #e5e7eb;
+  background: #eee;
+  box-shadow: rgba(50, 50, 93, 0.25) 0 2px 5px -1px, rgba(0, 0, 0, 0.3) 0 1px 3px -1px;
+  font-size: 1.5rem;
+  font-family: "Share Tech Mono", monospace;
+  padding: 2rem;
+  color: #aaa;
+}
+
+.keyboard {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-transform: uppercase;
+  gap: 0.5rem;
+  font-weight: bold;
+  padding: 2rem;
+  border-radius: 1rem;
+  background-image: repeating-linear-gradient(45deg, #111, #222, #111 5px);
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+}
+
+.row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.key {
+  position: relative;
+  color: #e5e7eb;
+  text-align: center;
+  min-width: 4rem;
+  padding: 0.7rem 1.5rem;
+  border: solid 1px #e5e7eb;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: ease-in-out 0.2s;
+  font-size: 1.2rem;
+}
+
+.key:hover,
+.key.press {
+  background-color: #0008;
+}
+
+.key.space {
+  width: 30rem;
+  text-align: center;
+}
+
+.key.home::before {
+  content: "";
+  position: absolute;
+  width: 1rem;
+  height: 2px;
+  background-color: #e5e7eb;
+  left: 50%;
+  bottom: 0.5rem;
+  transform: translate(-50%, 0);
+}
+
+.text {
+  font-family: "Share Tech Mono", monospace;
+}
+
+.text.typed {
+  color: green;
+}
+
+.text.wrong {
+  color: red;
+}
