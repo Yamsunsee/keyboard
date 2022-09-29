@@ -142,10 +142,10 @@ keyboard.forEach((row, index) => {
 });
 
 document.onkeydown = ({ key }) => {
-  document.querySelector(".key.next").classList.remove("next");
   if (Object.keys(keymap).includes(key)) {
     if (key !== "Backspace") {
       const targetKey = document.querySelector(`.key[data-key="${keymap[key]}"]`);
+      document.querySelector(".key.next").classList.remove("next");
       targetKey.classList.add("press");
     }
     validate(keymap[key]);
