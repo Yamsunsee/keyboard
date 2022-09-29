@@ -143,6 +143,7 @@ keyboard.forEach((row, index) => {
 
 document.onkeydown = ({ key }) => {
   if (Object.keys(keymap).includes(key)) {
+    if (key === "Backspace" && cursorPosition !== 0) document.querySelector(".key.next").classList.remove("next");
     if (key !== "Backspace") {
       const targetKey = document.querySelector(`.key[data-key="${keymap[key]}"]`);
       document.querySelector(".key.next").classList.remove("next");
