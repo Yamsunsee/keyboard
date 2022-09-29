@@ -71,6 +71,11 @@ body {
   text-align: center;
 }
 
+.key.next {
+  background-color: #e5e7eb;
+  color: #0008;
+}
+
 .key.home::before {
   content: "";
   position: absolute;

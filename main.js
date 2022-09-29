@@ -107,6 +107,10 @@ const render = () => {
     else if (index === 0 || validatedArray[index - 1] !== 0) newElement(sampleText[index], " current");
     else newElement(sampleText[index]);
   });
+  const targetKey = document.querySelector(
+    `.key[data-key="${sampleText[cursorPosition] === " " ? "space" : sampleText[cursorPosition]}"]`
+  );
+  targetKey.classList.add("next");
 };
 
 const reset = () => {
@@ -138,6 +142,7 @@ keyboard.forEach((row, index) => {
 });
 
 document.onkeydown = ({ key }) => {
+  document.querySelector(".key.next").classList.remove("next");
   if (Object.keys(keymap).includes(key)) {
     if (key !== "Backspace") {
       const targetKey = document.querySelector(`.key[data-key="${keymap[key]}"]`);
