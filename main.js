@@ -107,6 +107,8 @@ const render = () => {
     else if (index === 0 || validatedArray[index - 1] !== 0) newElement(sampleText[index], " current");
     else newElement(sampleText[index]);
   });
+  const prevTargetKey = document.querySelector(".key.next");
+  if (prevTargetKey) prevTargetKey.classList.remove("next");
   const targetKey = document.querySelector(
     `.key[data-key="${sampleText[cursorPosition] === " " ? "space" : sampleText[cursorPosition]}"]`
   );
@@ -143,10 +145,8 @@ keyboard.forEach((row, index) => {
 
 document.onkeydown = ({ key }) => {
   if (Object.keys(keymap).includes(key)) {
-    if (key === "Backspace" && cursorPosition !== 0) document.querySelector(".key.next").classList.remove("next");
     if (key !== "Backspace") {
       const targetKey = document.querySelector(`.key[data-key="${keymap[key]}"]`);
-      document.querySelector(".key.next").classList.remove("next");
       targetKey.classList.add("press");
     }
     validate(keymap[key]);
