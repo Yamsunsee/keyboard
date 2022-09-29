@@ -40,26 +40,86 @@ const keymap = {
   ".": ",",
   "/": ".",
   " ": "space",
+  Backspace: "delete",
 };
 
-const screenElement = document.querySelector(".screen");
+const screenElement = document.querySelector(".text-area");
+const resultElement = document.querySelector(".result");
+const accElement = document.querySelector(".acc");
+const wpmElement = document.querySelector(".wpm");
+const resetButton = document.querySelector(".icon");
 const keyboardElement = document.querySelector(".keyboard");
+const sampleText = "the quick brown fox jumped over the lazy dogs";
+let validatedArray = new Array(sampleText.length).fill(0);
+let cursorPosition = 0;
+let isCompleted = false;
+let correctCount = 0;
+let wrongCount = 0;
+let timeStart = 0;
+let duration = 0;
 
-const untypedTextElement = document.createElement("span");
-untypedTextElement.className = "text untyped";
-untypedTextElement.innerText = "the_quick_brown_fox_jumped_over_the_lazy_dogs";
-screenElement.appendChild(untypedTextElement);
+const showResult = () => {
+  accElement.innerText = Math.ceil((correctCount * 100) / (correctCount + wrongCount)) + "%";
+  wpmElement.innerText = Math.ceil((correctCount / 5) * (60 / duration));
+  resultElement.style.opacity = 1;
+};
 
-const render = (key) => {
-  const lastChild = document.querySelector(".screen").lastChild;
-  const letter = lastChild.innerText.slice(0, 1);
-  if (key === letter || (key === "space" && letter === "_")) {
-    const typedTextElement = document.createElement("span");
-    typedTextElement.className = "text typed";
-    typedTextElement.innerText = key === "space" ? "_" : key;
-    screenElement.parentNode.removeChild(lastChild);
-    screenElement.appendChild(typedTextElement);
+const validate = (key) => {
+  if (isCompleted) return;
+  if (key === "delete") {
+    if (cursorPosition > 0) {
+      wrongCount++;
+      cursorPosition -= 1;
+      validatedArray[cursorPosition] = 0;
+    }
+  } else {
+    if (timeStart === 0) timeStart = new Date();
+    if (key === sampleText[cursorPosition] || (key === "space" && sampleText[cursorPosition] === " ")) {
+      validatedArray[cursorPosition] = 1;
+      correctCount++;
+    } else {
+      validatedArray[cursorPosition] = 2;
+      wrongCount++;
+    }
+    if (cursorPosition < sampleText.length - 1) cursorPosition++;
+    else {
+      duration = (new Date() - timeStart) / 1000;
+      isCompleted = true;
+      resultElement.style.opacity = 1;
+      showResult();
+    }
   }
+  screenElement.innerText = "";
+  render();
+};
+
+const newElement = (value, className = null) => {
+  const span = document.createElement("span");
+  span.className = `text${className ? className : ""}`;
+  span.innerText = value;
+  screenElement.appendChild(span);
+};
+
+const render = () => {
+  validatedArray.forEach((status, index) => {
+    if (status === 1) newElement(sampleText[index], " correct");
+    else if (status === 2) newElement(sampleText[index], ` wrong${sampleText[index] === " " ? " space" : ""}`);
+    else if (index === 0 || validatedArray[index - 1] !== 0) newElement(sampleText[index], " current");
+    else newElement(sampleText[index]);
+  });
+};
+
+const reset = () => {
+  resultElement.style.opacity = 0;
+  validatedArray = new Array(sampleText.length).fill(0);
+  cursorPosition = 0;
+  isCompleted = false;
+  correctCount = 0;
+  wrongCount = 0;
+  timeStart = 0;
+  duration = 0;
+  screenElement.innerText = "";
+  render();
 };
 
 keyboard.forEach((row, index) => {
@@ -78,12 +138,24 @@ keyboard.forEach((row, index) => {
 });
 
 document.onkeydown = ({ key }) => {
-  const targetKey = document.querySelector(`.key[data-key="${keymap[key]}"]`);
-  targetKey.classList.add("press");
-  render(keymap[key]);
+  if (Object.keys(keymap).includes(key)) {
+    if (key !== "Backspace") {
+      const targetKey = document.querySelector(`.key[data-key="${keymap[key]}"]`);
+      targetKey.classList.add("press");
+    }
+    validate(keymap[key]);
+  }
 };
 
 document.onkeyup = ({ key }) => {
-  const targetKey = document.querySelector(`.key[data-key="${keymap[key]}"]`);
-  targetKey.classList.remove("press");
+  if (Object.keys(keymap).includes(key) && key !== "Backspace") {
+    const targetKey = document.querySelector(`.key[data-key="${keymap[key]}"]`);
+    targetKey.classList.remove("press");
+  } else if (key === "Enter" && isCompleted) {
+    reset();
+  }
 };
+
+resetButton.onclick = () => reset();
+
+render();
