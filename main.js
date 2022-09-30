@@ -1172,8 +1172,12 @@ keyboard.forEach((row) => {
   });
 });
 
-document.onkeydown = ({ key }) => {
-  if (Object.keys(keymap).includes(key)) {
+document.onkeydown = (event) => {
+  const key = event.key;
+  if (key === "Tab") {
+    event.preventDefault();
+    reset();
+  } else if (Object.keys(keymap).includes(key)) {
     const targetKey = document.querySelector(`.key[data-key="${keymap[key].toLowerCase()}"]`);
     targetKey.classList.add("press");
     validate(keymap[key]);
